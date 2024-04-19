@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-app-1
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/xcaliber-health/xcaliber-helm-charts.git'
+    path: nginx-app-1/
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: test
+  syncPolicy:
+    syncOptions:
+    - Validate=false
+    - Prune=true
+  syncWave:
+    order: 0
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-app-2
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/your-org/applications.git'
+    path: nginx-app-2/
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: test
+  syncPolicy:
+    syncOptions:
+    - Validate=false
+    - Prune=true
+  syncWave:
+    order: 1
+  dependsOn:
+    - name: nginx-app-1
